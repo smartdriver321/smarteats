@@ -1,10 +1,19 @@
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
 import './App.css'
-import { Button } from './components/ui/button'
+import Login from './auth/login'
+
+const appRouter = createBrowserRouter([
+	{
+		path: '/login',
+		element: <Login />,
+	},
+])
 
 export default function App() {
 	return (
-		<div>
-			<Button className='text-red-500'>Click Me!</Button>
-		</div>
+		<main>
+			<RouterProvider router={appRouter}></RouterProvider>
+		</main>
 	)
 }
