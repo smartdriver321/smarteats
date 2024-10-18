@@ -3,14 +3,21 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Signup from './auth/signup'
 import Login from './auth/login'
 import ForgotPassword from './auth/forgot-password'
-import ResetPasswordPage from './auth/reset-password'
+import ResetPassword from './auth/reset-password'
 import VerifyEmail from './auth/verify-email'
 import MainLayout from './layout/main-layout'
+import HeroSection from './components/hero-section'
 
 const appRouter = createBrowserRouter([
 	{
 		path: '/',
 		element: <MainLayout />,
+		children: [
+			{
+				path: '/',
+				element: <HeroSection />,
+			},
+		],
 	},
 	{
 		path: '/signup',
@@ -26,7 +33,7 @@ const appRouter = createBrowserRouter([
 	},
 	{
 		path: '/reset-password',
-		element: <ResetPasswordPage />,
+		element: <ResetPassword />,
 	},
 	{
 		path: '/verify-email',
