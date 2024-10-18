@@ -10,6 +10,7 @@ import HeroSection from './components/hero-section'
 import Profile from './components/profile'
 import RestaurantDetail from './components/restaurant-detail'
 import Cart from './components/cart'
+import Success from './components/success'
 import Restaurant from './admin/restaurant'
 import AddMenu from './admin/add-menu'
 import Orders from './admin/orders'
@@ -34,6 +35,10 @@ const appRouter = createBrowserRouter([
 			{
 				path: '/cart',
 				element: <Cart />,
+			},
+			{
+				path: '/order/status',
+				element: <Success />,
 			},
 			// admin services start from here
 			{
