@@ -10,6 +10,7 @@ import HeroSection from './components/hero-section'
 import Profile from './components/profile'
 import RestaurantDetail from './components/restaurant-detail'
 import Cart from './components/cart'
+import Restaurant from './admin/restaurant'
 
 const appRouter = createBrowserRouter([
 	{
@@ -31,6 +32,11 @@ const appRouter = createBrowserRouter([
 			{
 				path: '/cart',
 				element: <Cart />,
+			},
+			// admin services start from here
+			{
+				path: '/admin/restaurant',
+				element: <Restaurant />,
 			},
 		],
 	},
