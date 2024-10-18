@@ -8,6 +8,8 @@ import VerifyEmail from './auth/verify-email'
 import MainLayout from './layout/main-layout'
 import HeroSection from './components/hero-section'
 import Profile from './components/profile'
+import RestaurantDetail from './components/restaurant-detail'
+
 const appRouter = createBrowserRouter([
 	{
 		path: '/',
@@ -20,6 +22,10 @@ const appRouter = createBrowserRouter([
 			{
 				path: '/profile',
 				element: <Profile />,
+			},
+			{
+				path: '/restaurant/:id',
+				element: <RestaurantDetail />,
 			},
 		],
 	},
