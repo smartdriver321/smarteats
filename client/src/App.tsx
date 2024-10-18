@@ -5,8 +5,13 @@ import Login from './auth/login'
 import ForgotPassword from './auth/forgot-password'
 import ResetPasswordPage from './auth/reset-password'
 import VerifyEmail from './auth/verify-email'
+import MainLayout from './layout/main-layout'
 
 const appRouter = createBrowserRouter([
+	{
+		path: '/',
+		element: <MainLayout />,
+	},
 	{
 		path: '/signup',
 		element: <Signup />,

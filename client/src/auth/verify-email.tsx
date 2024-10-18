@@ -64,17 +64,12 @@ export default function VerifyEmailPage() {
 						))}
 					</div>
 					{loading ? (
-						<Button
-							disabled
-							className='bg-orange hover:bg-hoverOrange mt-6 w-full'
-						>
+						<Button disabled className=' mt-6 w-full text-blue-500'>
 							<Loader2 className='mr-2 w-4 h-4 animate-spin' />
 							Please wait
 						</Button>
 					) : (
-						<Button className='bg-orange hover:bg-hoverOrange mt-6 w-full'>
-							Verify
-						</Button>
+						<Button className=' mt-6 w-full text-blue-500'>Verify</Button>
 					)}
 				</form>
 			</div>
