@@ -8,6 +8,7 @@ import connectToDB from './models/db/connect-to-db'
 import userRouter from './routes/user.route'
 import restaurantRouter from './routes/restaurant.route'
 import menuRouter from './routes/menu.route'
+import orderRouter from './routes/order.route'
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -25,6 +26,7 @@ app.use(cors(corsOptions))
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/restaurant', restaurantRouter)
 app.use('/api/v1/menu', menuRouter)
+app.use('/api/v1/order', orderRouter)
 
 app.listen(PORT, async () => {
 	await connectToDB()
