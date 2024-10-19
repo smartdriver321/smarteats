@@ -6,6 +6,7 @@ import cors from 'cors'
 dotenv.config()
 import connectToDB from './models/db/connect-to-db'
 import userRouter from './routes/user.route'
+import restaurantRouter from './routes/restaurant.route'
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -21,6 +22,7 @@ app.use(cookieParser())
 app.use(cors(corsOptions))
 
 app.use('/api/v1/user', userRouter)
+app.use('/api/v1/restaurant', restaurantRouter)
 
 app.listen(PORT, async () => {
 	await connectToDB()
