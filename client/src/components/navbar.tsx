@@ -28,7 +28,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from './ui/dropdown-menu'
-
 import {
 	Sheet,
 	SheetClose,
@@ -39,8 +38,11 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from './ui/sheet'
+import { useThemeStore } from '@/store/useThemeStore'
 
 export default function Navbar() {
+	const { setTheme } = useThemeStore()
+
 	const loading = false
 
 	return (
@@ -52,8 +54,8 @@ export default function Navbar() {
 				<div className='hidden md:flex items-center gap-10'>
 					<div className='hidden md:flex items-center gap-6'>
 						<Link to='/'>Home</Link>
-						<Link to='/profile'>Profile</Link>
 						<Link to='/order/status'>Order</Link>
+						<Link to='/profile'>Profile</Link>
 
 						<Menubar>
 							<MenubarMenu>
@@ -66,7 +68,7 @@ export default function Navbar() {
 										<MenubarItem>Menu</MenubarItem>
 									</Link>
 									<Link to='/admin/orders'>
-										<MenubarItem>Orders</MenubarItem>
+										<MenubarItem>Order</MenubarItem>
 									</Link>
 								</MenubarContent>
 							</MenubarMenu>
@@ -83,8 +85,12 @@ export default function Navbar() {
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align='end'>
-									<DropdownMenuItem>Light</DropdownMenuItem>
-									<DropdownMenuItem>Dark</DropdownMenuItem>
+									<DropdownMenuItem onClick={() => setTheme('light')}>
+										Light
+									</DropdownMenuItem>
+									<DropdownMenuItem onClick={() => setTheme('dark')}>
+										Dark
+									</DropdownMenuItem>
 								</DropdownMenuContent>
 							</DropdownMenu>
 						</div>
@@ -128,6 +134,8 @@ export default function Navbar() {
 }
 
 const MobileNavbar = () => {
+	const { setTheme } = useThemeStore()
+
 	const loading = false
 
 	return (
@@ -153,26 +161,30 @@ const MobileNavbar = () => {
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align='end'>
-							<DropdownMenuItem>Light</DropdownMenuItem>
-							<DropdownMenuItem>Dark</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setTheme('light')}>
+								Light
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setTheme('dark')}>
+								Dark
+							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</SheetHeader>
 				<Separator className='my-2' />
 				<SheetDescription className='flex-1'>
 					<Link
-						to='/profile'
-						className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
-					>
-						<User />
-						<span>Profile</span>
-					</Link>
-					<Link
 						to='/order/status'
 						className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
 					>
 						<HandPlatter />
 						<span>Order</span>
+					</Link>
+					<Link
+						to='/profile'
+						className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
+					>
+						<User />
+						<span>Profile</span>
 					</Link>
 					<Link
 						to='/cart'
@@ -201,7 +213,7 @@ const MobileNavbar = () => {
 							className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
 						>
 							<PackageCheck />
-							<span>Restaurant Orders</span>
+							<span>Restaurant Order</span>
 						</Link>
 					</>
 				</SheetDescription>

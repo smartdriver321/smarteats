@@ -101,7 +101,7 @@ export const stripeWebhook = async (req: Request, res: Response) => {
 
 		// Construct the payload string for verification
 		const payloadString = JSON.stringify(req.body, null, 2)
-		const secret = process.env.WEBHOOK_ENDPOINT_SECRET!
+		const secret = process.env.STRIPE_WEBHOOK!
 
 		// Generate test header string for event construction
 		const header = stripe.webhooks.generateTestHeaderString({

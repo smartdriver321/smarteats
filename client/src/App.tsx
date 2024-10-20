@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
+import { useThemeStore } from './store/useThemeStore'
 import Signup from './auth/signup'
 import Login from './auth/login'
 import ForgotPassword from './auth/forgot-password'
@@ -78,6 +80,12 @@ const appRouter = createBrowserRouter([
 ])
 
 export default function App() {
+	const initializeTheme = useThemeStore((state: any) => state.initializeTheme)
+
+	useEffect(() => {
+		initializeTheme()
+	}, [])
+
 	return (
 		<main>
 			<RouterProvider router={appRouter}></RouterProvider>
