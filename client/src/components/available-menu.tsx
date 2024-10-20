@@ -1,8 +1,13 @@
 import { MenuItem } from '@/types/restaurantType'
 import { Button } from './ui/button'
 import { Card, CardContent, CardFooter } from './ui/card'
+import { useNavigate } from 'react-router-dom'
+import { useCartStore } from '@/store/useCartStore'
 
 export default function AvailableMenu({ menus }: { menus: MenuItem[] }) {
+	const navigate = useNavigate()
+	const { addToCart } = useCartStore()
+
 	return (
 		<div className='md:p-4'>
 			<h1 className='text-xl md:text-2xl font-extrabold mb-6'>
@@ -22,7 +27,15 @@ export default function AvailableMenu({ menus }: { menus: MenuItem[] }) {
 							</h3>
 						</CardContent>
 						<CardFooter className='p-4'>
-							<Button className='text-blue-500'>Add to Cart</Button>
+							<Button
+								onClick={() => {
+									addToCart(menu)
+									navigate('/cart')
+								}}
+								className='w-full bg-orange hover:bg-hoverOrange'
+							>
+								Add to Cart
+							</Button>
 						</CardFooter>
 					</Card>
 				))}

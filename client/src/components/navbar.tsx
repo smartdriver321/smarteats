@@ -40,10 +40,12 @@ import {
 } from './ui/sheet'
 import { useThemeStore } from '@/store/useThemeStore'
 import { useUserStore } from '@/store/useUserStore'
+import { useCartStore } from '@/store/useCartStore'
 
 export default function Navbar() {
 	const { setTheme } = useThemeStore()
 	const { user, loading, logout } = useUserStore()
+	const { cart } = useCartStore()
 
 	return (
 		<div className='max-w-7xl mx-auto'>
@@ -98,12 +100,14 @@ export default function Navbar() {
 						</div>
 						<Link to='/cart' className='relative cursor-pointer'>
 							<ShoppingCart />
-							<Button
-								size={'icon'}
-								className='absolute -inset-y-3 left-2 text-xs rounded-full w-4 h-4 bg-red-500 hover:bg-red-500'
-							>
-								4
-							</Button>
+							{cart.length > 0 && (
+								<Button
+									size={'icon'}
+									className='absolute -inset-y-3 left-2 text-xs rounded-full w-4 h-4 bg-red-500 hover:bg-red-500'
+								>
+									{cart.length}
+								</Button>
+							)}
 						</Link>
 						<div>
 							<Avatar>
@@ -137,6 +141,7 @@ export default function Navbar() {
 const MobileNavbar = () => {
 	const { setTheme } = useThemeStore()
 	const { user, logout, loading } = useUserStore()
+	const { cart } = useCartStore()
 
 	return (
 		<Sheet>
@@ -191,7 +196,14 @@ const MobileNavbar = () => {
 						className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
 					>
 						<ShoppingCart />
-						<span>Cart (4)</span>
+						{cart.length > 0 && (
+							<Button
+								size={'icon'}
+								className='absolute -inset-y-3 left-2 text-xs rounded-full w-4 h-4 bg-red-500 hover:bg-red-500'
+							>
+								{cart.length}
+							</Button>
+						)}{' '}
 					</Link>
 					{user?.admin && (
 						<>

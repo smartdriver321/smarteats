@@ -12,6 +12,10 @@ import {
 	DialogFooter,
 } from './ui/dialog'
 import { useUserStore } from '@/store/useUserStore'
+import { CheckoutSessionRequest } from '@/types/orderType'
+import { useCartStore } from '@/store/useCartStore'
+import { useOrderStore } from '@/store/useOrderStore'
+import { useRestaurantStore } from '@/store/useRestaurantStore'
 export default function CheckoutConfirmation({
 	open,
 	setOpen,
@@ -20,6 +24,9 @@ export default function CheckoutConfirmation({
 	setOpen: Dispatch<SetStateAction<boolean>>
 }) {
 	const { user } = useUserStore()
+	const { cart } = useCartStore()
+	const { restaurant } = useRestaurantStore()
+	const { createCheckoutSession, loading } = useOrderStore()
 
 	const [input, setInput] = useState({
 		name: user?.fullname || '',
@@ -33,13 +40,26 @@ export default function CheckoutConfirmation({
 		const { name, value } = e.target
 		setInput({ ...input, [name]: value })
 	}
+
 	const checkoutHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		// api implementation start from here
-		console.log(input)
+		try {
+			const checkoutData: CheckoutSessionRequest = {
+				cartItems: cart.map((cartItem) => ({
+					menuId: cartItem._id,
+					name: cartItem.name,
+					image: cartItem.image,
+					price: cartItem.price.toString(),
+					quantity: cartItem.quantity.toString(),
+				})),
+				deliveryDetails: input,
+				restaurantId: restaurant?._id as string,
+			}
+			await createCheckoutSession(checkoutData)
+		} catch (error) {
+			console.log(error)
+		}
 	}
-
-	const loading = false
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
