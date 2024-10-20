@@ -8,22 +8,26 @@ import {
 	Plus,
 } from 'lucide-react'
 
+import { useUserStore } from '@/store/useUserStore'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { Button } from './ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 export default function Profile() {
+	const { user, updateProfile } = useUserStore()
+	const imageRef = useRef<HTMLInputElement | null>(null)
+
 	const [profileData, setProfileData] = useState({
-		fullname: '',
-		email: '',
-		address: '',
-		city: '',
-		country: '',
-		profilePicture: '',
+		fullname: user?.fullname || '',
+		email: user?.email || '',
+		address: user?.address || '',
+		city: user?.city || '',
+		country: user?.country || '',
+		profilePicture: user?.profilePicture || '',
 	})
 	const [selectedProfilePicture, setSelectedProfilePicture] =
 		useState<string>('')
-	const imageRef = useRef<HTMLInputElement | null>(null)
+	const [isLoading, setIsLoading] = useState<boolean>(false)
 
 	const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -49,10 +53,15 @@ export default function Profile() {
 
 	const updateProfileHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		console.log(profileData)
-	}
 
-	const isLoading = false
+		try {
+			setIsLoading(true)
+			await updateProfile(profileData)
+			setIsLoading(false)
+		} catch (error) {
+			setIsLoading(false)
+		}
+	}
 
 	return (
 		<form className='max-w-7xl mx-auto my-5' onSubmit={updateProfileHandler}>

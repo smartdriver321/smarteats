@@ -11,6 +11,7 @@ import {
 	DialogDescription,
 	DialogFooter,
 } from './ui/dialog'
+import { useUserStore } from '@/store/useUserStore'
 export default function CheckoutConfirmation({
 	open,
 	setOpen,
@@ -18,13 +19,15 @@ export default function CheckoutConfirmation({
 	open: boolean
 	setOpen: Dispatch<SetStateAction<boolean>>
 }) {
+	const { user } = useUserStore()
+
 	const [input, setInput] = useState({
-		name: '',
-		email: '',
-		contact: '',
-		address: '',
-		city: '',
-		country: '',
+		name: user?.fullname || '',
+		email: user?.email || '',
+		contact: user?.contact.toString() || '',
+		address: user?.address || '',
+		city: user?.city || '',
+		country: user?.country || '',
 	})
 	const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target

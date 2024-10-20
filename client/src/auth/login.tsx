@@ -1,19 +1,22 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Loader2, LockKeyhole, Mail } from 'lucide-react'
 
+import { useUserStore } from '@/store/useUserStore'
+import { LoginInputState, userLoginSchema } from '@/schema/userSchema'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { LoginInputState, userLoginSchema } from '@/schema/userSchema'
 
 export default function LoginPage() {
 	const [input, setInput] = useState({
 		email: '',
 		password: '',
 	})
-
 	const [errors, setErrors] = useState<Partial<LoginInputState>>({})
+
+	const navigate = useNavigate()
+	const { loading, login } = useUserStore()
 
 	const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target
@@ -23,15 +26,20 @@ export default function LoginPage() {
 	const loginSubmitHandler = async (e: FormEvent) => {
 		e.preventDefault()
 		const result = userLoginSchema.safeParse(input)
+
 		if (!result.success) {
 			const fieldErrors = result.error.formErrors.fieldErrors
 			setErrors(fieldErrors as Partial<LoginInputState>)
 			return
 		}
-		console.log(input)
-	}
 
-	const loading = false
+		try {
+			await login(input)
+			navigate('/')
+		} catch (error) {
+			console.log(error)
+		}
+	}
 
 	return (
 		<div className='flex items-center justify-center min-h-screen'>
@@ -81,7 +89,7 @@ export default function LoginPage() {
 						</Button>
 					) : (
 						<Button type='submit' className='w-full text-blue-500'>
-							Login
+							LogIn
 						</Button>
 					)}
 					<div className='mt-4'>
@@ -97,7 +105,7 @@ export default function LoginPage() {
 				<p className='mt-2'>
 					Don't have an account?{' '}
 					<Link to='/signup' className='text-blue-500'>
-						Signup
+						SignUp
 					</Link>
 				</p>
 			</form>

@@ -1,11 +1,16 @@
 import { FormEvent, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 
+import { useUserStore } from '@/store/useUserStore'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
 export default function VerifyEmailPage() {
 	const [otp, setOtp] = useState<string[]>(['', '', '', '', '', ''])
+
+	const navigate = useNavigate()
+	const { loading, verifyEmail } = useUserStore()
 	const inputRef = useRef<any>([])
 	const handleChange = (index: number, value: string) => {
 		if (/^[a-zA-Z0-9]$/.test(value) || value === '') {
@@ -13,6 +18,7 @@ export default function VerifyEmailPage() {
 			newOtp[index] = value
 			setOtp(newOtp)
 		}
+
 		// Move to the next input field id a digit is entered
 		if (value !== '' && index < 5) {
 			inputRef.current[index + 1].focus()
@@ -30,10 +36,14 @@ export default function VerifyEmailPage() {
 	const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		const verificationCode = otp.join('')
-		console.log(verificationCode)
-	}
 
-	const loading = false
+		try {
+			await verifyEmail(verificationCode)
+			navigate('/')
+		} catch (error) {
+			console.log(error)
+		}
+	}
 
 	return (
 		<div className='flex items-center justify-center h-screen w-full'>

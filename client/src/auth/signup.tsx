@@ -1,11 +1,12 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Loader2, LockKeyhole, Mail, PhoneOutgoing, User } from 'lucide-react'
 
 import { SignupInputState, userSignupSchema } from '@/schema/userSchema'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { useUserStore } from '@/store/useUserStore'
 
 // typescript me type define krne ka 2 trika hota hai
 
@@ -16,8 +17,10 @@ export default function SignupPage() {
 		password: '',
 		contact: '',
 	})
-
 	const [errors, setErrors] = useState<Partial<SignupInputState>>({})
+
+	const navigate = useNavigate()
+	const { signup, loading } = useUserStore()
 
 	const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target
@@ -34,10 +37,13 @@ export default function SignupPage() {
 			setErrors(fieldErrors as Partial<SignupInputState>)
 			return
 		}
-		// login api implementation start here
-		console.log(input)
+		try {
+			await signup(input)
+			navigate('/verify-email')
+		} catch (error) {
+			console.log(error)
+		}
 	}
-	const loading = false
 
 	return (
 		<div className='flex items-center justify-center min-h-screen'>
@@ -119,7 +125,7 @@ export default function SignupPage() {
 						</Button>
 					) : (
 						<Button type='submit' className='w-full text-blue-500'>
-							Signup
+							SignUp
 						</Button>
 					)}
 				</div>
@@ -127,7 +133,7 @@ export default function SignupPage() {
 				<p className='mt-2'>
 					Already have an account?{' '}
 					<Link to='/login' className='text-blue-500'>
-						Login
+						LogIn
 					</Link>
 				</p>
 			</form>

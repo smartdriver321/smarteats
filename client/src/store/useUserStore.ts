@@ -1,3 +1,4 @@
+import { redirect } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { create } from 'zustand'
@@ -32,7 +33,7 @@ type UserState = {
 	logout: () => Promise<void>
 	forgotPassword: (email: string) => Promise<void>
 	resetPassword: (token: string, newPassword: string) => Promise<void>
-	updateProfile: (input: any) => Promise<void>
+	updateProfile: (input: unknown) => Promise<void>
 }
 
 export const useUserStore = create<UserState>()(
@@ -59,7 +60,7 @@ export const useUserStore = create<UserState>()(
 							isAuthenticated: true,
 						})
 					}
-				} catch (error: any) {
+				} catch (error: unknown) {
 					toast.error(error.response.data.message)
 					set({ loading: false })
 				}
@@ -80,7 +81,7 @@ export const useUserStore = create<UserState>()(
 							isAuthenticated: true,
 						})
 					}
-				} catch (error: any) {
+				} catch (error: unknown) {
 					toast.error(error.response.data.message)
 					set({ loading: false })
 				}
@@ -105,7 +106,7 @@ export const useUserStore = create<UserState>()(
 							isAuthenticated: true,
 						})
 					}
-				} catch (error: any) {
+				} catch (error: unknown) {
 					toast.success(error.response.data.message)
 					set({ loading: false })
 				}
@@ -133,7 +134,8 @@ export const useUserStore = create<UserState>()(
 						toast.success(response.data.message)
 						set({ loading: false, user: null, isAuthenticated: false })
 					}
-				} catch (error: any) {
+					redirect('/')
+				} catch (error: unknown) {
 					toast.error(error.response.data.message)
 					set({ loading: false })
 				}
@@ -149,7 +151,7 @@ export const useUserStore = create<UserState>()(
 						toast.success(response.data.message)
 						set({ loading: false })
 					}
-				} catch (error: any) {
+				} catch (error: unknown) {
 					toast.error(error.response.data.message)
 					set({ loading: false })
 				}
@@ -165,12 +167,12 @@ export const useUserStore = create<UserState>()(
 						toast.success(response.data.message)
 						set({ loading: false })
 					}
-				} catch (error: any) {
+				} catch (error: unknown) {
 					toast.error(error.response.data.message)
 					set({ loading: false })
 				}
 			},
-			updateProfile: async (input: any) => {
+			updateProfile: async (input: unknown) => {
 				try {
 					const response = await axios.put(
 						`${API_END_POINT}/profile/update`,
@@ -185,7 +187,7 @@ export const useUserStore = create<UserState>()(
 						toast.success(response.data.message)
 						set({ user: response.data.user, isAuthenticated: true })
 					}
-				} catch (error: any) {
+				} catch (error: unknown) {
 					toast.error(error.response.data.message)
 				}
 			},

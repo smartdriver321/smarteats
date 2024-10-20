@@ -39,11 +39,11 @@ import {
 	SheetTrigger,
 } from './ui/sheet'
 import { useThemeStore } from '@/store/useThemeStore'
+import { useUserStore } from '@/store/useUserStore'
 
 export default function Navbar() {
 	const { setTheme } = useThemeStore()
-
-	const loading = false
+	const { user, loading, logout } = useUserStore()
 
 	return (
 		<div className='max-w-7xl mx-auto'>
@@ -57,22 +57,24 @@ export default function Navbar() {
 						<Link to='/order/status'>Order</Link>
 						<Link to='/profile'>Profile</Link>
 
-						<Menubar>
-							<MenubarMenu>
-								<MenubarTrigger>Dashboard</MenubarTrigger>
-								<MenubarContent>
-									<Link to='/admin/restaurant'>
-										<MenubarItem>Restaurant</MenubarItem>
-									</Link>
-									<Link to='/admin/menu'>
-										<MenubarItem>Menu</MenubarItem>
-									</Link>
-									<Link to='/admin/orders'>
-										<MenubarItem>Order</MenubarItem>
-									</Link>
-								</MenubarContent>
-							</MenubarMenu>
-						</Menubar>
+						{user?.admin && (
+							<Menubar>
+								<MenubarMenu>
+									<MenubarTrigger>Dashboard</MenubarTrigger>
+									<MenubarContent>
+										<Link to='/admin/restaurant'>
+											<MenubarItem>Restaurant</MenubarItem>
+										</Link>
+										<Link to='/admin/menu'>
+											<MenubarItem>Menu</MenubarItem>
+										</Link>
+										<Link to='/admin/orders'>
+											<MenubarItem>Orders</MenubarItem>
+										</Link>
+									</MenubarContent>
+								</MenubarMenu>
+							</Menubar>
+						)}
 					</div>
 					<div className='flex items-center gap-4'>
 						<div>
@@ -105,10 +107,7 @@ export default function Navbar() {
 						</Link>
 						<div>
 							<Avatar>
-								<AvatarImage
-									src='https://avatars.githubusercontent.com/u/91216500?v=4'
-									alt='profilephoto'
-								/>
+								<AvatarImage src={user?.profilePicture} alt='profilephoto' />
 								<AvatarFallback>CN</AvatarFallback>
 							</Avatar>
 						</div>
@@ -119,7 +118,9 @@ export default function Navbar() {
 									Please wait
 								</Button>
 							) : (
-								<Button className='text-blue-500'>Logout</Button>
+								<Button className='text-blue-500' onClick={logout}>
+									LogOut
+								</Button>
 							)}
 						</div>
 					</div>
@@ -135,8 +136,7 @@ export default function Navbar() {
 
 const MobileNavbar = () => {
 	const { setTheme } = useThemeStore()
-
-	const loading = false
+	const { user, logout, loading } = useUserStore()
 
 	return (
 		<Sheet>
@@ -193,34 +193,36 @@ const MobileNavbar = () => {
 						<ShoppingCart />
 						<span>Cart (4)</span>
 					</Link>
-					<>
-						<Link
-							to='/admin/menu'
-							className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
-						>
-							<SquareMenu />
-							<span>Menu</span>
-						</Link>
-						<Link
-							to='/admin/restaurant'
-							className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
-						>
-							<UtensilsCrossed />
-							<span>Restaurant</span>
-						</Link>
-						<Link
-							to='/admin/orders'
-							className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
-						>
-							<PackageCheck />
-							<span>Restaurant Order</span>
-						</Link>
-					</>
+					{user?.admin && (
+						<>
+							<Link
+								to='/admin/menu'
+								className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
+							>
+								<SquareMenu />
+								<span>Menu</span>
+							</Link>
+							<Link
+								to='/admin/restaurant'
+								className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
+							>
+								<UtensilsCrossed />
+								<span>Restaurant</span>
+							</Link>
+							<Link
+								to='/admin/orders'
+								className='flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium'
+							>
+								<PackageCheck />
+								<span>Restaurant Order</span>
+							</Link>
+						</>
+					)}
 				</SheetDescription>
 				<SheetFooter className='flex flex-col gap-4'>
 					<div className='flex flex-row items-center gap-2'>
 						<Avatar>
-							<AvatarImage src='https://avatars.githubusercontent.com/u/91216500?v=4' />
+							<AvatarImage src={user?.profilePicture} />
 							<AvatarFallback>CN</AvatarFallback>
 						</Avatar>
 						<h1 className='font-bold'>Smart Dev</h1>
@@ -232,7 +234,9 @@ const MobileNavbar = () => {
 								Please wait
 							</Button>
 						) : (
-							<Button className='text-blue-500'>Logout</Button>
+							<Button className='text-blue-500' onClick={logout}>
+								LogOut
+							</Button>
 						)}
 					</SheetClose>
 				</SheetFooter>
