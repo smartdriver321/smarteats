@@ -1,6 +1,8 @@
 import React, { FormEvent, useState } from 'react'
 import { Loader2, Plus } from 'lucide-react'
 
+import { useRestaurantStore } from '@/store/useRestaurantStore'
+import { useMenuStore } from '@/store/useMenuStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -16,18 +18,10 @@ import {
 import { MenuFormSchema, menuSchema } from '@/schema/menuSchema'
 import EditMenu from './edit-menu'
 
-const menus = [
-	{
-		title: 'Biryani',
-		description:
-			'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
-		price: 200,
-		image:
-			'https://www.thespruceeats.com/thmb/XDBL9gA6A6nYWUdsRZ3QwH084rk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/SES-chicken-biryani-recipe-7367850-hero-A-ed211926bb0e4ca1be510695c15ce111.jpg',
-	},
-]
-
 export default function AddMenu() {
+	const { restaurant } = useRestaurantStore()
+	const { loading, createMenu } = useMenuStore()
+
 	const [input, setInput] = useState<MenuFormSchema>({
 		name: '',
 		description: '',
@@ -35,9 +29,9 @@ export default function AddMenu() {
 		image: undefined,
 	})
 	const [open, setOpen] = useState<boolean>(false)
-	const [error, setError] = useState<Partial<MenuFormSchema>>({})
 	const [editOpen, setEditOpen] = useState<boolean>(false)
 	const [selectedMenu, setSelectedMenu] = useState<any>()
+	const [error, setError] = useState<Partial<MenuFormSchema>>({})
 
 	const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value, type } = e.target
@@ -59,16 +53,17 @@ export default function AddMenu() {
 			formData.append('name', input.name)
 			formData.append('description', input.description)
 			formData.append('price', input.price.toString())
+
 			if (input.image) {
 				formData.append('image', input.image)
 			}
+
+			await createMenu(formData)
 		} catch (error) {
 			console.log(error)
 		}
 		console.log(input)
 	}
-
-	const loading = false
 
 	return (
 		<div className='max-w-6xl mx-auto my-10'>
@@ -78,7 +73,7 @@ export default function AddMenu() {
 				</h1>
 				<Dialog open={open} onOpenChange={setOpen}>
 					<DialogTrigger>
-						<Button className='text-blue-500'>
+						<Button className='bg-orange hover:bg-hoverOrange'>
 							<Plus className='mr-2' />
 							Add Menus
 						</Button>
@@ -122,7 +117,7 @@ export default function AddMenu() {
 								)}
 							</div>
 							<div>
-								<Label>Price in (Dollar)</Label>
+								<Label>Price in (Rupees)</Label>
 								<Input
 									type='number'
 									name='price'
@@ -156,19 +151,21 @@ export default function AddMenu() {
 							</div>
 							<DialogFooter className='mt-5'>
 								{loading ? (
-									<Button disabled className='text-blue-500'>
+									<Button disabled className='bg-orange hover:bg-hoverOrange'>
 										<Loader2 className='mr-2 w-4 h-4 animate-spin' />
 										Please wait
 									</Button>
 								) : (
-									<Button className='text-blue-500'>Submit</Button>
+									<Button className='bg-orange hover:bg-hoverOrange'>
+										Submit
+									</Button>
 								)}
 							</DialogFooter>
 						</form>
 					</DialogContent>
 				</Dialog>
 			</div>
-			{menus.map((menu: any, idx: number) => (
+			{restaurant?.menus.map((menu: any, idx: number) => (
 				<div key={idx} className='mt-6 space-y-4'>
 					<div className='flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border'>
 						<img
@@ -186,12 +183,12 @@ export default function AddMenu() {
 							</h2>
 						</div>
 						<Button
-							size={'sm'}
-							className='text-blue-500 mt-2'
 							onClick={() => {
 								setSelectedMenu(menu)
 								setEditOpen(true)
 							}}
+							size={'sm'}
+							className='bg-orange hover:bg-hoverOrange mt-2'
 						>
 							Edit
 						</Button>

@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -8,8 +8,17 @@ import {
 	RestaurantFormSchema,
 	restaurantFromSchema,
 } from '@/schema/restaurantSchema'
+import { useRestaurantStore } from '@/store/useRestaurantStore'
 
 export default function Restaurant() {
+	const {
+		loading,
+		restaurant,
+		updateRestaurant,
+		createRestaurant,
+		getRestaurant,
+	} = useRestaurantStore()
+
 	const [input, setInput] = useState<RestaurantFormSchema>({
 		restaurantName: '',
 		city: '',
@@ -29,22 +38,59 @@ export default function Restaurant() {
 		e.preventDefault()
 
 		const result = restaurantFromSchema.safeParse(input)
+
 		if (!result.success) {
 			const fieldErrors = result.error.formErrors.fieldErrors
 			setErrors(fieldErrors as Partial<RestaurantFormSchema>)
 			return
 		}
-		console.log(input)
+		try {
+			const formData = new FormData()
+			formData.append('restaurantName', input.restaurantName)
+			formData.append('city', input.city)
+			formData.append('country', input.country)
+			formData.append('deliveryTime', input.deliveryTime.toString())
+			formData.append('cuisines', JSON.stringify(input.cuisines))
+
+			if (input.imageFile) {
+				formData.append('imageFile', input.imageFile)
+			}
+
+			if (restaurant) {
+				await updateRestaurant(formData)
+			} else {
+				await createRestaurant(formData)
+			}
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
-	const loading = false
-	const restaurant = false
+	useEffect(() => {
+		const fetchRestaurant = async () => {
+			await getRestaurant()
+			if (restaurant) {
+				setInput({
+					restaurantName: restaurant.restaurantName || '',
+					city: restaurant.city || '',
+					country: restaurant.country || '',
+					deliveryTime: restaurant.deliveryTime || 0,
+					cuisines: restaurant.cuisines
+						? restaurant.cuisines.map((cuisine: string) => cuisine)
+						: [],
+					imageFile: undefined,
+				})
+			}
+		}
+		fetchRestaurant()
+		console.log(restaurant)
+	}, [])
 
 	return (
 		<div className='max-w-6xl mx-auto my-10'>
 			<div>
 				<div>
-					<h1 className='font-extrabold text-2xl mb-5'>Add Restaurants</h1>
+					<h1 className='font-extrabold text-2xl mb-5'>Add Restaurant</h1>
 					<form onSubmit={submitHandler}>
 						<div className='md:grid grid-cols-2 gap-6 space-y-2 md:space-y-0'>
 							{/* Restaurant Name  */}
